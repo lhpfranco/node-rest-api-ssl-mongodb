@@ -1,0 +1,33 @@
+{
+  "name": "agendaescolarapi",
+  "version": "1.0.0",
+  "description": "Rest API para agenda escolar infantil",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lhpfranco/agenda-escolar-node-api.git"
+  },
+  "keywords": [
+    "agenda",
+    "escolar"
+  ],
+  "author": "Luis Franco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lhpfranco/agenda-escolar-node-api/issues"
+  },
+  "homepage": "https://github.com/lhpfranco/agenda-escolar-node-api#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "mocha": "^10.2.0",
+    "mongodb": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
+  }
+}
