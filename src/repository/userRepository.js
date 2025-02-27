@@ -1,28 +1,35 @@
 const MongoClient = require('mongodb').MongoClient;
 const config = require('../../config/config');
+const { mongoClientConnect, mongoClientClose } = require('../connectors/mongoDbConnector')
+
 
 const findOneUser = async (username) => {
-    const client = await MongoClient.connect(config.mongoDbUrl);
-    const db = client.db(config.mongoDbName);
-    const collection = db.collection(config.mongoDbCollectionName);
-    const user = await collection.findOne({ username });
-    const jsonString = JSON.stringify(user);
-    console.log('returned user: ' + jsonString);
-    client.close();
+    let collection = await mongoClientConnect(config.mongoDbUrl, config.mongoDbName, config.mongoDbCollectionName);
+    
+    try{
+        const user = await collection.findOne({ username });
+    }catch(err){
+        console.error(`MongoDB collection ${config.mongoDbName} insertOne error: ${err.message}`);
+        throw new Error(err);
+    }
+    
+    await mongoClientClose();
     return user;
 };
 
 
 const addOneUserDB = async (newUser) => {
-    const client = await MongoClient.connect(config.mongoDbUrl);
-    const db = client.db(config.mongoDbName);
-    const collection = db.collection(config.mongoDbCollectionName);
-    collection.insertOne(newUser, function(err, result) {
-        if (err) throw err;
+    let collection = await mongoClientConnect(config.mongoDbUrl, config.mongoDbName, config.mongoDbCollectionName);
+   
+    try{
+        await collection.createIndex({ username: 1 }, { unique: true });
+        await collection.insertOne(newUser);
+    }catch(err){
+        console.error(`MongoDB collection ${config.mongoDbName} insertOne error: ${err.message}`);
+        throw new Error(err);
+    }
     
-        console.log(`Added new user with ID ${result.insertedId}`);
-        client.close();
-    });
+    await mongoClientClose();
 };
 
 module.exports = {
